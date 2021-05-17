@@ -1,0 +1,5 @@
+model.joblib
+dic.txt
+
+*.pdf
+*_feature.txt
