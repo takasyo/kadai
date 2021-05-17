@@ -9,6 +9,11 @@ def make_word2id(): #make_word2id関数の定義
 
     with open('train.txt', 'r', encoding='utf_8') as f:
         morphemes = [s.strip()[1:] for s in f.readlines()]
+    with open('additional_data.txt', 'r', encoding='utf_8') as f:
+        tmp = [s.strip()[1:] for s in f.readlines()]
+        # 61~70行目のカテゴリIDがおかしい
+        morphemes.extend(tmp[:60])
+        morphemes.extend(tmp[70:])
 
     for line in morphemes:
         for word in line.split():
@@ -27,6 +32,12 @@ def make_feature(word2id): #make_feature関数の定義
 
         with open(text_name + '.txt', 'r', encoding='utf_8') as f:
             morphemes = [s.strip()[1:] for s in f.readlines()]
+        if text_name == 'train':
+            with open('additional_data.txt', 'r', encoding='utf_8') as f:
+                tmp = [s.strip()[1:] for s in f.readlines()]
+                # 61~70行目のカテゴリIDがおかしい
+                morphemes.extend(tmp[:60])
+                morphemes.extend(tmp[70:])
 
         bow_set = []
         for line in morphemes:
@@ -59,6 +70,13 @@ def load_data(X_text,y_text): #load_data関数の定義
     with open(y_text,encoding="utf_8") as f:
         reader = csv.reader(f, delimiter='\t')
         y_data = [row[0] for row in reader]
+    if y_text == 'train.txt':
+        with open('additional_data.txt',encoding="utf_8") as f:
+            reader = csv.reader(f, delimiter='\t')
+            tmp = [row[0] for row in reader]
+            # 61~70行目のカテゴリIDがおかしい
+            y_data.extend(tmp[:60])
+            y_data.extend(tmp[70:])
 
     # str型をfloat型に変換
     for i in range(len(X_data)):
