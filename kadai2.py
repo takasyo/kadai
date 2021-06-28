@@ -38,14 +38,9 @@ def make_feature(word2id): #make_feature関数の定義
                         bow[word2id[word]] = 1
             bow_set.append(bow)
 
-        with open(text_name + '_feature.txt', 'w') as f:
-            for i in range(len(bow_set)):
-                for j in range(len(bow_set[i])):
-                    f.write(str(bow_set[i][j]))
-                    if j == len(bow_set[i])-1:
-                        f.write('\n')
-                    else:
-                        f.write(',')
+        with open(text_name + '_feature.txt', 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerows(bow_set)
 
 make_feature(word2id) #make_feature関数の実行
 
