@@ -3,7 +3,6 @@ import csv
 import joblib
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
-import numpy as np
 import math
 
 def make_word2id(): #make_word2id関数の定義
@@ -42,12 +41,15 @@ def make_feature(word2id): #make_feature関数の定義
             tf = list(map(lambda x: x/count, bow)) if count != 0 else bow
             bow_set.append(tf)
 
-        bow_set = np.array(bow_set)
-        bow_sum = bow_set.sum(axis=0)
+        df = [0] * len(bow_set[0])
         for i in range(len(bow_set)):
             for j in range(len(bow_set[i])):
-                df = bow_sum[j] + 1.0e-10
-                idf = math.log(len(bow_set)/df) + 1
+                if bow_set[i][j] != 0:
+                    df[j] += 1
+
+        for i in range(len(bow_set)):
+            for j in range(len(bow_set[i])):
+                idf = math.log(len(bow_set)/df[j]) + 1 if df[j] != 0 else 0
                 bow_set[i][j] *= idf
 
         with open(text_name + '_feature.txt', 'w') as f:
